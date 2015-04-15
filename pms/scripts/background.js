@@ -123,6 +123,7 @@ function onInit() {
 }
 
 function onAlarm(alarm) {
+	startRequest(false);
 	console.log('Got alarm', alarm);
 	if (alarm && alarm.name == 'watchdog') {
 		onWatchdog();
