@@ -1,0 +1,23 @@
+{
+   "background":{
+      "persistent":true,
+      "page":"background.html"
+   },
+   "browser_action":{
+      "default_icon":"grey_message.png"
+   },
+   "options_page":"options.html",
+   "description":"Extension to check for Oneplus Forum PM's",
+   "icons":{
+      "128":"icon_128_grey.png"
+   },
+   "name":"Oneplus Forum PM checker",
+   "permissions":[
+      "alarms",
+      "tabs",
+      "webNavigation",
+      "*://forums.oneplus.net/*"
+   ],
+   "version":"1.0.0",
+   "manifest_version":2
+}
