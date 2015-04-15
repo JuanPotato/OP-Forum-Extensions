@@ -1,0 +1,84 @@
+body {
+	overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 350px;
+	margin: 0;
+	padding: 0;
+	color: #333;
+	font-family: Helvetica, Tahoma, Verdana, sans-serif;
+}
+
+body.popup {
+	width: 300px;
+}
+
+#notifications {
+  font-size: 14px;
+
+}
+
+
+.date {
+	font-size: 10px;
+	 float: right;
+color:#A4A4A4
+}
+
+.notification {
+	border-bottom: 1px solid #FFF;
+	padding: 5px;
+	background: #EEE;
+
+}
+
+.no-notifications {
+  padding: 5px;
+}
+.notification strong{
+color:#369;
+
+}
+.notification:hover {
+	background: #FFF;
+	cursor: pointer;
+}
+
+.notification h4, .no-notifications  h4 {
+	margin: 0px;
+	font-weight: normal;
+}
+
+.no-notifications h4 {
+  text-align: center;
+}
+
+#control {
+  font-size: 20px;
+}
+
+#control {
+  background-color: #DDD;
+  padding: 5px;
+  line-height: 26px;
+}
+
+#control:after {
+  content: " ";
+  clear: both;
+}
+
+#control .forceRefresh {
+  float: right;
+}
+
+#control i {
+  cursor: pointer;
+
+}
+
+
+.group:after {
+  content: "";
+  display: table;
+  clear: both;
+}
