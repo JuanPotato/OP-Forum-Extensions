@@ -1,5 +1,5 @@
 var forumUrl = "https://forums.oneplus.net/conversations/";
-var feedUrl = "https://forums.oneplus.net/members/66909/?card=1&_xfResponseType=json";
+var feedUrl = "https://forums.oneplus.net/?_xfResponseType=json";
 
 var oldChromeVersion = !chrome.runtime;
 var requestTimerId;
@@ -9,6 +9,7 @@ function isForumUrl(url) {
 }
 
 function updateIcon() {
+	console.log("Updating Icon...");
 	if (!localStorage.hasOwnProperty('unreadCount')) {
 		chrome.browserAction.setBadgeBackgroundColor({
 			color : [190, 190, 190, 230]
@@ -69,6 +70,7 @@ function startRequest(params) {
 }
 
 function getInboxCount(onSuccess) {
+	console.log("Checking for PMs...");
 	try {
 		$.get(feedUrl, function (data) {
 			localStorage.requestFailureCount = 0;
@@ -113,35 +115,15 @@ function onInit() {
 	console.log('onInit');
 	localStorage.requestFailureCount = 0; // used for exponential backoff
 	startRequest(true);
-	if (!oldChromeVersion) {
-		// TODO(mpcomplete): We should be able to remove this now, but leaving it
-		// for a little while just to be sure the refresh alarm is working nicely.
-		chrome.alarms.create('watchdog', {
-			periodInMinutes : 5
-		});
-	}
 }
 
 function onAlarm(alarm) {
-	startRequest(false);
 	console.log('Got alarm', alarm);
-	if (alarm && alarm.name == 'watchdog') {
-		onWatchdog();
-	} else {
+	if (alarm) {
 		startRequest(true);
+	} else {
+		startRequest(false);
 	}
-}
-
-function onWatchdog() {
-	chrome.alarms.get('refresh', function (alarm) {
-		if (alarm) {
-			console.log('Refresh alarm exists. Yay.');
-		} else {
-			console.log('Refresh alarm doesn\'t exist!? ' +
-				'Refreshing now and rescheduling.');
-			startRequest(true);
-		}
-	});
 }
 
 if (oldChromeVersion) {
@@ -153,8 +135,6 @@ if (oldChromeVersion) {
 }
 
 var filters = {
-	// TODO(aa): Cannot use urlPrefix because all the url fields lack the protocol
-	// part. See crbug.com/140238.
 	url : [{
 			urlContains : forumUrl.replace(/^https?\:\/\//, '')
 		}
@@ -196,20 +176,12 @@ if (chrome.runtime && chrome.runtime.onStartup) {
 }
 
 chrome.runtime.onMessage.addListener(
-  function(request, sender, sendResponse) {
-    console.log(sender.tab ?
-                "from a content script:" + sender.tab.url :
-                "from the extension");
-    if (request.action == 'notificationIntervalChanged') {
+	function (request, sender, sendResponse) {
+	console.log(sender.tab ?
+		"from a content script:" + sender.tab.url :
+		"from the extension");
+	if (request.action == 'notificationIntervalChanged') {
 		chrome.alarms.clearAll();
 		startRequest(true);
 	}
-  });
-  
-setTimeout(function () {
-	getInboxCount(
-		function (count) {
-		updateUnreadCount(count);
-	});
-	chrome.extension.getBackgroundPage().console.log('foo');
-}, 1000);
+});
